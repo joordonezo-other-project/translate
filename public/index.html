@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!--import index css-->
+    <link rel="stylesheet" href="css/index.css" />
+    <title>Document</title>
+</head>
+<body class="animate">
+  <!--navbar with share to gitHub-->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <span class="bi bi-terminal-fill"></span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" title="Home Page">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <!--ul nav-bar pull right-->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <!--button link to github more icon-->
+            <a class="nav-link" href="https://github.com/SADRES-joordonezo/translate" target="_blank" title="Share in gitHub">
+              <span class="bi bi-github"></span>
+            </a>
+
+          </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+  <!--modal table languajes and CRUD-->
+  <div class="modal fade" id="modal_table" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Availables Languages</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <table id="tableLang" class="table table-striped table-bordered table-hover dataTables-example" id="table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+          </table>
+        </div>
+
+        <div class="modal-footer">
+          <!--div container-->
+          <div class="container">
+            <div class="input-group">
+              <!--input search at endpint the languages-->
+          <input list="lang" id="searchLang" class="form-control" placeholder="Search Languages" />
+          <datalist id="lang"></datalist>
+              <span class="input-group-btn">
+                <!--create a button add-->
+          <button id="addLanguage" type="button" class="btn btn-default" title="Append language">
+            <span class="bi bi-plus-circle-fill" aria-hidden="true"></span>
+          </button>
+              </span>                
+            </div>
+          </div>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
+    <!--a web pague bootstrapt with one input and button search-->
+    <div class="mt-2 container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="jumbotron">
+            <!--button open modal-->
+            <button id="openModal" type="button" class="btn btn-secondary btn-xs" data-toggle="modal" data-target="#modal_table" title="Add new language">
+              <span class="bi bi-translate"> Add</span>
+            </button>
+
+            <h1>Search</h1>
+              <div class="input-group">
+                <input id="text" type="text" class="form-control" name="search" placeholder="Search">
+                <span class="input-group-btn">
+                  <button id="execute-translate" class="btn btn-default" type="button" title="Execute query">
+                    <span class="bi bi-search"></span>
+                  </button>
+                </span>                
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<!--table bootstrap for response with  btn copy to clipboard-->
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="jumbotron">
+        <span class="bi bi-columns"></span>
+        <h1>Search Result</h1>
+        <table id="tableResults" class="table table-striped">
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+            
+</div>
+
+    
+    <!--import bootstrap cd js-->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <!--import index js-->
+    <script src="js/index.js"></script>
+  </body>
+</html>
