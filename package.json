@@ -1,0 +1,28 @@
+{
+  "name": "translate",
+  "version": "1.0.0",
+  "description": "app for multiple translate",
+  "main": "serv.js",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "hbs": "^4.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "scripts": {
+    "test": "test",
+    "start": "node serv.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SADRES-joordonezo/translate.git"
+  },
+  "author": "jorgeluisordonez1995@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SADRES-joordonezo/translate/issues"
+  },
+  "homepage": "https://github.com/SADRES-joordonezo/translate#readme"
+}
