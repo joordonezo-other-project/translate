@@ -49,7 +49,7 @@ function createLanguagesList(languagesList) {
  * function generate table from currentData no innerHTML with headers and rows
  */
 function drawTable(currentData, arrayLangs) {
-    let headers = ['language', 'to', 'text'];
+    let headers = ['language', 'to', 'text', 'tag bondle'];
     /**
      * restore table from DOM
      */
@@ -81,8 +81,9 @@ function drawTable(currentData, arrayLangs) {
             let td = document.createElement('td');
             j == 0 ? td.innerText = currentData[i].detectedLanguage.language :
                 j == 1 ? td.innerText = currentData[i].translations[0].to + ' - ' + arrayLangs.find(x => x.code == currentData[i].translations[0].to).name :
-                    j == 2 ? td.innerText = currentData[i].translations[0].text : '';
-            if (j == 2) {
+                    j == 2 ? td.innerText = currentData[i].translations[0].text :
+                        j == 3 ? td.innerText = document.getElementById('tag').value + ' = ' + replaceSimbolForUnicode(currentData[i].translations[0].text) : '';
+            if (j >= 2) {
                 /**
                  * add button copy to clipboard
                  */
@@ -129,6 +130,14 @@ function buildLangInSelect(languagesList) {
     }
 }
 
+/**
+ * function replace all symbol for unicode /uXXXX/
+ */
+function replaceSimbolForUnicode(text) {
+    let unicode = escape(text).replaceAll('%', '\\u00');
+    return unicode;
+}
+
 /** document ready */
 $(document).ready(function () {
     let arrayLangs = [
@@ -141,8 +150,7 @@ $(document).ready(function () {
         { code: 'en-GB', name: 'English (GB)' }
     ];
     let allLangs = [];
-
-    document.getElementById('execute-translate').addEventListener('click', function () {
+    function executeQuery() {
         if (!document.getElementById('text').value) {
             return false;
         }
@@ -170,12 +178,22 @@ $(document).ready(function () {
                     drawTable(data.data, arrayLangs);
                 }
             });
-
+    }
+    document.getElementById('execute-translate').addEventListener('click', executeQuery);
+    document.getElementById('text').addEventListener('keyup', function (e) {
+        if (e.key !== undefined && e.key.toLowerCase() === 'enter') {
+            executeQuery();
+        }
+    });
+    document.getElementById('tag').addEventListener('keyup', function (e) {
+        if (e.key !== undefined && e.key.toLowerCase() === 'enter') {
+            executeQuery();
+        }
     });
     /**
      * add event click to openModal
      */
-    document.getElementById('openModal').addEventListener('click', function () {
+    document.getElementById('openModal').addEventListener('click', function (e) {
         if (allLangs.length == 0) {
             /**
              * generate request to get languages

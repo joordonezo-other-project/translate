@@ -82,11 +82,11 @@
     <!--a web pague bootstrapt with one input and button search-->
     <div class="mt-2 container">
       <div class="row">
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-lg-6 col-md-6 col-md-offset-3 col-lg-offset-3">
           <div class="jumbotron">
             <!--button open modal-->
             <button id="openModal" type="button" class="btn btn-secondary btn-xs" data-toggle="modal" data-target="#modal_table" title="Add new language">
-              <span class="bi bi-translate"> Add</span>
+              Add <span class="bi bi-translate"></span>
             </button>
 
             <h1>Search</h1>
@@ -98,6 +98,11 @@
                   </button>
                 </span>                
               </div>
+              <div class=" mt-2 input-group">
+                <div class="col-lg-10 col-md-10">
+                <input id="tag" type="text" class="form-control" name="tag" placeholder="Tag">
+              </div>
+              </div>
           </div>
         </div>
       </div>
@@ -105,7 +110,7 @@
 <!--table bootstrap for response with  btn copy to clipboard-->
 <div class="container">
   <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-10 col-md-offset-1">
       <div class="jumbotron">
         <span class="bi bi-columns"></span>
         <h1>Search Result</h1>
