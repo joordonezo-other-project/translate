@@ -66,7 +66,8 @@ function drawTable(currentData, arrayLangs) {
     let thead = document.createElement('thead');
     let tr = document.createElement('tr');
     for (let i = 0; i < headers.length; i++) {
-        let td = document.createElement('td');
+        let td = document.createElement('th');
+        td.scope = 'col';
         td.innerText = headers[i];
         tr.appendChild(td);
     }
@@ -131,12 +132,19 @@ function buildLangInSelect(languagesList) {
 }
 
 /**
- * function replace all symbol for unicode /uXXXX/
+ * function replace all symbol for unicode /uXXXX/ except characters who " .-"
  */
 function replaceSimbolForUnicode(text) {
-    let unicode = escape(text).replaceAll('%', '\\u00');
-    return unicode;
+    let textForUnicode = text.replace(/[^\w\s]/gi, function (x) {
+        let code = x.charCodeAt(0).toString(16).toUpperCase();
+        code = code.length == 1 ? '000' + code : 
+               code.length == 2 ? '00' + code :
+               code.length == 3 ? '0' + code :code;
+        return '\\u' + code;
+    });
+    return textForUnicode;
 }
+
 
 /** document ready */
 $(document).ready(function () {
