@@ -267,6 +267,7 @@ $(document).ready(function () {
     const encoder = new TextEncoder();
 
     function ConvertStringToHex(str) {
+        console.log(str);
         var arr = [];
         var phrase = "";
         for (var i = 0; i < str.length; i++) {
@@ -281,6 +282,7 @@ $(document).ready(function () {
              }
                
         }
+        console.log(phrase);
         return phrase;
     }
 
@@ -291,7 +293,7 @@ $(document).ready(function () {
         document.body.appendChild(a);
         a.style = "display: none";
 
-        var blob = new Blob([convertFile], { type: "text/plain;charset=ISO-8859-1", encoding: "ISO-8859-1" });
+        var blob = new Blob([convertFile], { type: "text/plain;charset=utf-8"  });
         url = window.URL.createObjectURL(blob);
         a.href = url;
         a.download = "file.properties";
@@ -316,24 +318,6 @@ $(document).ready(function () {
         });
         saveDynamicDataToFile(result);
     };
-
-    function ConvertStringToHex(str) {
-        var arr = [];
-        var phrase = "";
-        for (var i = 0; i < str.length; i++) {
-            
-            var work =encodeURI(str[i]);
-            if(str[i] != work && work != "%20"){
-              arr[i] = ("00" + str.charCodeAt(i).toString(16)).slice(-4);
-              phrase += "\\u" + arr[i];
-            } else{
-                phrase += str[i];
-            }
-            
-               
-        }
-        return phrase;
-    }
 
     /**
      * Browse files and change values in the base file
@@ -425,8 +409,8 @@ $(document).ready(function () {
             }
 
         };
-        readTranslate.readAsText(fileTranslate,"ISO-8859-1");
-        readBase.readAsText(baseFile,"ISO-8859-1");
+        readTranslate.readAsText(fileTranslate);
+        readBase.readAsText(baseFile);
     }
 
     /**
