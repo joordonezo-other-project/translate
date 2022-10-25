@@ -6,7 +6,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "express": "^4.17.1",
-    "hbs": "^4.1.2"
+    "hbs": "^4.1.2",
+    "properties-to-json": "^0.2.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
