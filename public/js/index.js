@@ -137,9 +137,9 @@ function buildLangInSelect(languagesList) {
 function replaceSimbolForUnicode(text) {
     let textForUnicode = text.replace(/[^\w\s]/gi, function (x) {
         let code = x.charCodeAt(0).toString(16).toUpperCase();
-        code = code.length == 1 ? '000' + code : 
-               code.length == 2 ? '00' + code :
-               code.length == 3 ? '0' + code :code;
+        code = code.length == 1 ? '000' + code :
+            code.length == 2 ? '00' + code :
+                code.length == 3 ? '0' + code : code;
         return '\\u' + code;
     });
     return textForUnicode;
@@ -155,7 +155,9 @@ $(document).ready(function () {
         { code: 'fr-CA', name: 'French (Canada)' },
         { code: 'fr', name: 'French' },
         { code: 'en', name: 'English' },
-        { code: 'en-GB', name: 'English (GB)' }
+        { code: 'en-GB', name: 'English (GB)' },
+        { code: 'nl', name: 'Nederlands' },
+        { code: 'pl', name: 'Polonais' }
     ];
     let allLangs = [];
     function executeQuery() {
@@ -261,6 +263,178 @@ $(document).ready(function () {
      * create list languages in DOM
      */
     createLanguagesList(arrayLangs);
+
+    const encoder = new TextEncoder();
+
+    function ConvertStringToHex(str) {
+        var arr = [];
+        var phrase = "";
+        for (var i = 0; i < str.length; i++) {
+               var word = str[i];
+               var wordEncode = encodeURI(str[i]);
+             if(word != wordEncode && wordEncode !="%20"){
+               arr[i] = ("00" + str.charCodeAt(i).toString(16)).slice(-4);
+               phrase += "\\u" + arr[i];
+             }
+             else{
+                 phrase += str[i];
+             }
+               
+        }
+        return phrase;
+    }
+
+    function saveDynamicDataToFile(translatedFile) {
+        
+        var convertFile = translatedFile.join('\n');
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+
+        var blob = new Blob([convertFile], { type: "text/plain;charset=ISO-8859-1", encoding: "ISO-8859-1" });
+        url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = "file.properties";
+        a.click();
+        window.URL.revokeObjectURL(url);
+        saveAs(blob, "file.properties");
+    }
+
+    function convertToProperties(translatedFile) {
+        var result = [];
+        translatedFile.forEach(element => {
+            if (typeof element == "string") {
+                result.push(element);
+            }
+            if (typeof element == "object" && element.key == "") {
+                result.push("");
+            }
+            if (typeof element == "object" && element.key != "") {
+                result.push(element.key.concat(' = ').concat(element.value || ''));
+            }
+
+        });
+        saveDynamicDataToFile(result);
+    };
+
+    function ConvertStringToHex(str) {
+        var arr = [];
+        var phrase = "";
+        for (var i = 0; i < str.length; i++) {
+            
+            var work =encodeURI(str[i]);
+            if(str[i] != work && work != "%20"){
+              arr[i] = ("00" + str.charCodeAt(i).toString(16)).slice(-4);
+              phrase += "\\u" + arr[i];
+            } else{
+                phrase += str[i];
+            }
+            
+               
+        }
+        return phrase;
+    }
+
+    /**
+     * Browse files and change values in the base file
+     */
+
+    function browseFiles(contentFileT, contetBaseFile) {
+        for (var keyTransalete in contentFileT) {
+            if (contentFileT.hasOwnProperty(keyTransalete)) {
+                var value = contentFileT[keyTransalete];
+                contetBaseFile.forEach(element => {
+                    if (typeof element == "object") {
+                        if (keyTransalete == element.key) {
+                            element.value = ConvertStringToHex(value);
+                        }
+                    }
+                });
+            }
+        }
+        convertToProperties(contetBaseFile);
+    }
+
+    const propertiesToJSONWithoutComments = (str) => {
+        return (
+            str
+                // Concat lines that end with '\'.
+                .replace(/\\\n( )*/g, '')
+                // Split by line breaks.
+                .split('\n')
+                // Remove commented lines:
+                .filter((line) =>
+                    /(\#|\!)/.test(line.replace(/\s/g, '').slice(0, 1))
+                        ? false
+                        : line
+                )
+                // Create the JSON:
+                .reduce((obj, line) => {
+                    // Replace only '=' that are not escaped with '\' to handle separator inside key
+                    const colonifiedLine = line.replace(/(?<!\\)=/, ':');
+                    const key = colonifiedLine
+                        // Extract key from index 0 to first not escaped colon index
+                        .substring(0, colonifiedLine.search(/(?<!\\):/))
+                        // Remove not needed backslash from key
+                        .replace(/\\/g, '')
+                        .trim();
+                    const value = colonifiedLine
+                        .substring(colonifiedLine.search(/(?<!\\):/) + 1)
+                        .trim();
+                    obj[key] = value;
+                    return obj;
+                }, {})
+        );
+    };
+    const propertiesToJSONwithComments = (str) => {
+        return (
+            str
+                .replace(/\\\n( )*/g, '')
+                .split('\n')
+
+                .map(function (line) {
+                    if (/(\#|\!)/.test(line.replace(/\s/g, '').slice(0, 1))) {
+                        return line;
+                    }
+                    const colonifiedLine = line.replace(/(?<!\\)=/, ':');
+                    const key = colonifiedLine
+                        .substring(0, colonifiedLine.search(/(?<!\\):/))
+                        .replace(/\\/g, '')
+                        .trim();
+                    const value = colonifiedLine
+                        .substring(colonifiedLine.search(/(?<!\\):/) + 1)
+                        .trim();
+                    return { key, value }
+
+                })
+        );
+    };
+    function readFile(fileT, fileB) {
+        const fileTranslate = fileT;
+        const baseFile = fileB;
+        if (!fileTranslate && !baseFile) {
+            return;
+        }
+        const readTranslate = new FileReader();
+        const readBase = new FileReader();
+        readTranslate.onload = function (fileT) {
+            readBase.onload = function (fileB) {
+                const contentFileB = fileB.target.result;
+                const contentFileT = fileT.target.result;
+                browseFiles(propertiesToJSONWithoutComments(contentFileT), propertiesToJSONwithComments(contentFileB));
+            }
+
+        };
+        readTranslate.readAsText(fileTranslate,"ISO-8859-1");
+        readBase.readAsText(baseFile,"ISO-8859-1");
+    }
+
+    /**
+     * Button for translate file and activate download button
+     */
+    document.getElementById('translateFile').addEventListener('click', function () {
+        readFile(document.getElementById('inputFile').files[0], document.getElementById('inputFileBase').files[0]);
+    });
 });
 
 
