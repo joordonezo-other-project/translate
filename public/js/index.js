@@ -49,7 +49,7 @@ function createLanguagesList(languagesList) {
  * function generate table from currentData no innerHTML with headers and rows
  */
 function drawTable(currentData, arrayLangs) {
-    let headers = ['language', 'to', 'text', 'tag bondle'];
+    let headers = ['language', 'text', 'tag bondle'];
     /**
      * restore table from DOM
      */
@@ -80,11 +80,10 @@ function drawTable(currentData, arrayLangs) {
         let tr = document.createElement('tr');
         for (let j = 0; j < headers.length; j++) {
             let td = document.createElement('td');
-            j == 0 ? td.innerText = currentData[i].detectedLanguage.language :
-                j == 1 ? td.innerText = currentData[i].translations[0].to + ' - ' + arrayLangs.find(x => x.code == currentData[i].translations[0].to).name :
-                    j == 2 ? td.innerText = currentData[i].translations[0].text :
-                        j == 3 ? td.innerText = document.getElementById('tag').value + ' = ' + replaceSimbolForUnicode(currentData[i].translations[0].text) : '';
-            if (j >= 2) {
+            j == 0 ? td.innerText = currentData[i].lang :
+                    j == 1 ? td.innerText = currentData[i].text :
+                        j == 2 ? td.innerText = document.getElementById('tag').value + ' = ' + replaceSimbolForUnicode(currentData[i].text) : '';
+            if (j >= 1) {
                 /**
                  * add button copy to clipboard
                  */
@@ -126,7 +125,7 @@ function buildLangInSelect(languagesList) {
     for (code in languagesList) {
         let option = document.createElement('option');
         option.value = code;
-        option.innerText = languagesList[code].name + ' - ' + languagesList[code].nativeName;
+        option.innerText = code + ' - ' + languagesList[code];
         select.appendChild(option);
     }
 }
@@ -151,11 +150,8 @@ $(document).ready(function () {
     let arrayLangs = [
         { code: 'de', name: "German" },
         { code: 'es', name: "Spanish" },
-        { code: 'es-US', name: 'Spanish (EEUU)' },
-        { code: 'fr-CA', name: 'French (Canada)' },
         { code: 'fr', name: 'French' },
         { code: 'en', name: 'English' },
-        { code: 'en-GB', name: 'English (GB)' },
         { code: 'nl', name: 'Nederlands' },
         { code: 'pl', name: 'Polonais' }
     ];
@@ -216,8 +212,8 @@ $(document).ready(function () {
             })
                 .then(response => response.json())
                 .then((data) => {
-                    allLangs = data.translation;
-                    buildLangInSelect(data.translation);
+                    allLangs = data.supported_languages;
+                    buildLangInSelect(data.supported_languages);
                 });
         }
     });
@@ -248,9 +244,9 @@ $(document).ready(function () {
             /**
              * add lang to arrayLangs
              */
-            let exist = arrayLangs.find(item => item.code == lang);
+            let exist = arrayLangs.find(item => item.name == lang);
             if (!exist) {
-                arrayLangs.push({ code: lang, name: langInAll.name });
+                arrayLangs.push({ code: langInAll, name: lang  });
                 createLanguagesList(arrayLangs);
             }
             searchLang.value = '';
@@ -267,7 +263,6 @@ $(document).ready(function () {
     const encoder = new TextEncoder();
 
     function ConvertStringToHex(str) {
-        console.log(str);
         var arr = [];
         var phrase = "";
         for (var i = 0; i < str.length; i++) {
@@ -282,7 +277,6 @@ $(document).ready(function () {
              }
                
         }
-        console.log(phrase);
         return phrase;
     }
 

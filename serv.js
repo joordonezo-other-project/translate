@@ -1,9 +1,9 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const hbs = require('hbs');
 const axios = require('axios').default;
 const bodyParser = require('body-parser');
-
 
 const port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/public'));
@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 app.post('/languages', bodyParser.json(), (req, res) => {
     getLanguages()
         .then((data) => {
-            res.send(data);
+            res.send(data.data);
         })
         .catch((error) => {
             res.json({
@@ -48,19 +48,17 @@ translate = (text, arrayLangs) => {
         for (array in arrayLangs) {
             arrayRequests.push(axios.request({
                 method: 'POST',
-                url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
-                params: {
-                    'api-version': '3.0',
-                    to: arrayLangs[array],
-                    textType: 'plain',
-                    profanityAction: 'NoAction'
-                },
+                url: 'https://translate-plus.p.rapidapi.com/translate',
                 headers: {
                     'content-type': 'application/json',
-                    'x-rapidapi-key': process.env.RAPIAPIKEY || '',
-                    'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com'
+                    'X-RapidAPI-Key': process.env.RAPIAPIKEY || '',
+                    'X-RapidAPI-Host': 'translate-plus.p.rapidapi.com'
                 },
-                data: [{ Text: text }]
+                data: {
+                    "text": text,
+                    "source": "auto",
+                    "target": arrayLangs[array]
+                }
             }));
         }
 
@@ -79,7 +77,7 @@ translate = (text, arrayLangs) => {
 extractData = (responses) => {
     let arrayData = [];
     for (array in responses) {
-        arrayData.push(responses[array].data[0]);
+        arrayData.push({lang:responses[array].data.translations.target, text:responses[array].data.translations.translation});
     }
     return arrayData;
 };
@@ -88,18 +86,15 @@ getLanguages = () => {
     return new Promise((resolve, reject) => {
         axios.request({
             method: 'GET',
-            url: 'https://microsoft-translator-text.p.rapidapi.com/languages',
-            params: {
-                'api-version': '3.0',
-            },
+            url: 'https://translate-plus.p.rapidapi.com/',
             headers: {
                 'content-type': 'application/json',
-                'x-rapidapi-key': process.env.RAPIAPIKEY || '',
-                'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com'
+                'X-RapidAPI-Key': process.env.RAPIAPIKEY || '',
+                'X-RapidAPI-Host': 'translate-plus.p.rapidapi.com'
             }
         })
             .then((response) => {
-                resolve(response.data);
+                resolve(response);
             })
             .catch((error) => {
                 reject(error);
