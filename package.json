@@ -5,6 +5,7 @@
   "main": "serv.js",
   "dependencies": {
     "axios": "^0.21.1",
+    "dotenv": "^16.0.3",
     "express": "^4.17.1",
     "hbs": "^4.1.2",
     "properties-to-json": "^0.2.1"
