@@ -1,3 +1,5 @@
+//const { response } = require("express");
+
 /*create list languages in dDOM*/
 function createLanguagesList(languagesList) {
     /**
@@ -271,29 +273,29 @@ $(document).ready(function () {
         var arr = [];
         var phrase = "";
         for (var i = 0; i < str.length; i++) {
-               var word = str[i];
-               var wordEncode = encodeURI(str[i]);
-             if(word != wordEncode && wordEncode !="%20"){
-               arr[i] = ("00" + str.charCodeAt(i).toString(16)).slice(-4);
-               phrase += "\\u" + arr[i];
-             }
-             else{
-                 phrase += str[i];
-             }
-               
+            var word = str[i];
+            var wordEncode = encodeURI(str[i]);
+            if (word != wordEncode && wordEncode != "%20") {
+                arr[i] = ("00" + str.charCodeAt(i).toString(16)).slice(-4);
+                phrase += "\\u" + arr[i];
+            }
+            else {
+                phrase += str[i];
+            }
+
         }
         console.log(phrase);
         return phrase;
     }
 
     function saveDynamicDataToFile(translatedFile) {
-        
+
         var convertFile = translatedFile.join('\n');
         var a = document.createElement("a");
         document.body.appendChild(a);
         a.style = "display: none";
 
-        var blob = new Blob([convertFile], { type: "text/plain;charset=utf-8"  });
+        var blob = new Blob([convertFile], { type: "text/plain;charset=utf-8" });
         url = window.URL.createObjectURL(blob);
         a.href = url;
         a.download = "file.properties";
@@ -337,6 +339,50 @@ $(document).ready(function () {
             }
         }
         convertToProperties(contetBaseFile);
+    }
+    function executeQueryTranslate(phrase) {
+        console.log(phrase);
+        if (phrase == "") {
+            return false;
+        }
+
+        /**
+         * request fetch to post translate 
+         */
+        var checkedValue = document.querySelector('.form-check-input:checked').value;
+        var checkedValueFrom = document.querySelector('.from:checked').value;
+        fetch('https://microsoft-translator-text.p.rapidapi.com/translate?api-version=3.0&to%5B0%5D=es', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'X-RapidAPI-Key': 'eb8ef6d81fmsh84342605655cd02p14fe50jsnd81790189c16',
+                'X-RapidAPI-Host': 'microsoft-translator-text.p.rapidapi.com'
+            },
+            body: JSON.stringify({
+                text: phrase,
+            }),
+        })
+            .then(response => response.json())
+            .then((data) => {
+                if (!data.error) {
+                    console.log(data)
+                    drawTable(data.data);
+                }
+            });
+    }
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    function browseFile(contentFile) {
+        contentFile.forEach(element => {
+            if (typeof element == "object") {
+                if (element.value != "") {
+                    //let phraseTraslated = executeQueryTranslate(element.value)
+                    console.log(executeQueryTranslate(element.value));
+                }
+                element.value = ConvertStringToHex(element.value);
+            }
+        });
     }
 
     const propertiesToJSONWithoutComments = (str) => {
@@ -411,6 +457,19 @@ $(document).ready(function () {
         };
         readTranslate.readAsText(fileTranslate);
         readBase.readAsText(baseFile);
+    };
+    function readFileFormLenguage(fileT) {
+        const fileTranslate = fileT;
+        if (!fileTranslate) {
+            return;
+        }
+        const readTranslate = new FileReader();
+
+        readTranslate.onload = function (fileT) {
+            const contentFileT = fileT.target.result;
+            browseFile(propertiesToJSONwithComments(contentFileT));
+        };
+        readTranslate.readAsText(fileTranslate);
     }
 
     /**
@@ -418,6 +477,10 @@ $(document).ready(function () {
      */
     document.getElementById('translateFile').addEventListener('click', function () {
         readFile(document.getElementById('inputFile').files[0], document.getElementById('inputFileBase').files[0]);
+    });
+    //Button for translate file with select lenguage 
+    document.getElementById('translateFileWithLenguage').addEventListener('click', function () {
+        readFileFormLenguage(document.getElementById('inputFileForTranslate').files[0]);
     });
 });
 

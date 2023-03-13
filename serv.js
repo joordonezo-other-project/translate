@@ -57,7 +57,7 @@ translate = (text, arrayLangs) => {
                 },
                 headers: {
                     'content-type': 'application/json',
-                    'x-rapidapi-key': process.env.RAPIAPIKEY || '',
+                    'x-rapidapi-key': '3cc800cf91msh503db8bc141d857p18c908jsn6cd3d9e10191' || '3cc800cf91msh503db8bc141d857p18c908jsn6cd3d9e10191',
                     'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com'
                 },
                 data: [{ Text: text }]
@@ -94,7 +94,7 @@ getLanguages = () => {
             },
             headers: {
                 'content-type': 'application/json',
-                'x-rapidapi-key': process.env.RAPIAPIKEY || '',
+                'x-rapidapi-key': "3cc800cf91msh503db8bc141d857p18c908jsn6cd3d9e10191" || '3cc800cf91msh503db8bc141d857p18c908jsn6cd3d9e10191',
                 'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com'
             }
         })
